@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador SEO - Algoritmo A*</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <a id="top"></a>
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <div class="title-section">
+          <h1>Simulador de Optimización SEO con Búsqueda Informada</h1>
+          <p class="subtitle">Implementación del algoritmo A* para optimización de sitios web</p>
+        </div>
+        <div class="logo-container">
+          <img src="umg.png" alt="Logo UMG" class="logo-img">
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="info-section">
+        <div class="info-card">
+          <h2>¿Qué es la búsqueda informada?</h2>
+          <p>La búsqueda informada es un tipo de algoritmo que utiliza conocimiento específico del dominio
+            (heurísticas) para guiar el proceso de búsqueda hacia soluciones óptimas de manera más eficiente.</p>
+          <p>En este simulador, implementamos el algoritmo A* donde:</p>
+          <ul>
+            <li><strong>f(n) = g(n) + h(n)</strong> - La función de evaluación</li>
+            <li><strong>g(n)</strong> - El costo acumulado hasta el nodo actual</li>
+            <li><strong>h(n)</strong> - La heurística que estima el costo al objetivo</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="simulator-section">
+        <div class="panel">
+          <h2>Estado Actual del Sitio</h2>
+          
+          <div class="metrics">
+            <div class="metric-item">
+              <div class="metric-icon"><i class="fas fa-tachometer-alt"></i></div>
+              <div class="metric-info">
+                <h3>Velocidad</h3>
+                <div class="progress-container">
+                  <div class="progress-bar" id="velocidad-bar"></div>
+                  <span class="progress-text"><span id="velocidad">30</span>/100</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="metric-item">
+              <div class="metric-icon"><i class="fas fa-key"></i></div>
+              <div class="metric-info">
+                <h3>Palabras clave</h3>
+                <div class="progress-container">
+                  <div class="progress-bar" id="keywords-bar"></div>
+                  <span class="progress-text"><span id="keywords">40</span>/100</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="metric-item">
+              <div class="metric-icon"><i class="fas fa-link"></i></div>
+              <div class="metric-info">
+                <h3>Enlaces internos</h3>
+                <div class="progress-container">
+                  <div class="progress-bar" id="enlaces-bar"></div>
+                  <span class="progress-text"><span id="enlaces">20</span>/100</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="metric-item">
+              <div class="metric-icon"><i class="fas fa-font"></i></div>
+              <div class="metric-info">
+                <h3>Legibilidad</h3>
+                <div class="progress-container">
+                  <div class="progress-bar" id="legibilidad-bar"></div>
+                  <span class="progress-text"><span id="legibilidad">50</span>/100</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="evaluation">
+            <div class="eval-item">
+              <h3>Heurística h(n):</h3>
+              <div class="eval-value" id="heuristica">0</div>
+            </div>
+            <div class="eval-item">
+              <h3>Costo g(n):</h3>
+              <div class="eval-value" id="coste">0</div>
+            </div>
+            <div class="eval-item highlight">
+              <h3>Evaluación f(n):</h3>
+              <div class="eval-value" id="evaluacion">0</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="panel actions">
+          <h2>Aplicar acciones de mejora SEO</h2>
+          <p>Cada acción incrementa el costo g(n) en 1 unidad</p>
+          
+          <div class="action-buttons">
+            <button id="btn-velocidad" onclick="aplicarAccion('velocidad')">
+              <i class="fas fa-tachometer-alt"></i> Optimizar velocidad
+              <span class="tooltip">+10 puntos de velocidad</span>
+            </button>
+            
+            <button id="btn-keywords" onclick="aplicarAccion('keywords')">
+              <i class="fas fa-key"></i> Mejorar palabras clave
+              <span class="tooltip">+10 puntos en palabras clave</span>
+            </button>
+            
+            <button id="btn-enlaces" onclick="aplicarAccion('enlaces')">
+              <i class="fas fa-link"></i> Agregar enlaces internos
+              <span class="tooltip">+10 puntos en enlaces</span>
+            </button>
+            
+            <button id="btn-legibilidad" onclick="aplicarAccion('legibilidad')">
+              <i class="fas fa-font"></i> Mejorar legibilidad
+              <span class="tooltip">+10 puntos de legibilidad</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="panel">
+          <h2>Historial de Acciones</h2>
+          <div id="historial-acciones" class="historial">
+            <p class="no-historial">No se han realizado acciones</p>
+          </div>
+        </div>
+      </section>
+      
+      <section id="estructuras-datos">
+        <div class="info-card">
+          <h2>Estructuras de Datos en Búsquedas</h2>
+          <p>Las estructuras de datos utilizadas varían según el tipo de búsqueda:</p>
+          
+          <div class="table-container">
+            <table>
+              <tr>
+                <th>Tipo de Búsqueda</th>
+                <th>Estructura de Datos</th>
+                <th>Característica</th>
+              </tr>
+              <tr>
+                <td>Amplitud (BFS)</td>
+                <td>Cola (FIFO)</td>
+                <td>Explora niveles completos antes de avanzar</td>
+              </tr>
+              <tr>
+                <td>Profundidad (DFS)</td>
+                <td>Pila (LIFO)</td>
+                <td>Explora un camino hasta el final antes de retroceder</td>
+              </tr>
+              <tr>
+                <td>Costo Uniforme</td>
+                <td>Cola de Prioridad</td>
+                <td>Ordena por costo acumulado g(n)</td>
+              </tr>
+              <tr>
+                <td>Greedy</td>
+                <td>Cola de Prioridad</td>
+                <td>Ordena por valor heurístico h(n)</td>
+              </tr>
+              <tr>
+                <td>A*</td>
+                <td>Cola de Prioridad</td>
+                <td>Ordena por f(n) = g(n) + h(n)</td>
+              </tr>
+            </table>
+          </div>
+          
+          <p><strong>En nuestro caso:</strong> El algoritmo A* utiliza una cola de prioridad que organiza los estados según su valor f(n), seleccionando siempre el de menor valor para expandirlo.</p>
+        </div>
+      </section>
+    </main>
+    
+    <footer id="footer">
+      <div class="footer-content">
+        <p>Simulador de Algoritmo A* para Inteligencia Artificial - Implementación de Búsqueda Informada</p>
+        <div class="creators">
+          <h3>Desarrollado por:</h3>
+          <ul>
+            <li><i class="fas fa-user"></i> Cristian Daniel Mendoza Hernández -  2290 – 21 -20201 </li>
+            <li><i class="fas fa-user"></i> Santos Benitez Santiago Simón Hernández – 2290 - 21 - 9304 </li>
+            <li><i class="fas fa-user"></i> Oscar Branly Piaba Alva - 2290-21-17382 </li>
+            <li><i class="fas fa-university"></i> Mariano Galvez de Guatemala</li>
+            <li><i class="fas fa-book"></i> Curso de Inteligencia Artificial</li>
+          </ul>
+        </div>
+      </div>
+      <a href="#top" class="scroll-top-btn" title="Ir arriba"><i class="fas fa-arrow-up"></i></a>
+    </footer>
+  </div>
+
+  <!-- Botón flotante para ir abajo -->
+  <a href="#footer" class="scroll-down-btn" title="Ir abajo"><i class="fas fa-arrow-down"></i></a>
+
+  <script src="script.js"></script>
+</body>
+</html>
